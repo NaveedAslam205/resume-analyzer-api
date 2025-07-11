@@ -1,21 +1,16 @@
-import os
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
+from transformers import T5Tokenizer, T5ForConditionalGeneration, pipeline
 
-model_name = "meta-llama/Llama-2-7b-chat-hf"
-hf_token = os.getenv("HUGGINGFACE_TOKEN")
+model_name = "google/flan-t5-base"
+tokenizer = T5Tokenizer.from_pretrained(model_name)
+model = T5ForConditionalGeneration.from_pretrained(model_name)
 
-tokenizer = AutoTokenizer.from_pretrained(model_name, token=hf_token)
-model = AutoModelForCausalLM.from_pretrained(
-    model_name, device_map="auto", load_in_4bit=True, token=hf_token
-)
-
-generator = pipeline("text-generation", model=model, tokenizer=tokenizer)
+generator = pipeline("text2text-generation", model=model, tokenizer=tokenizer)
 
 def generate_ai_feedback(resume: str, jd: str):
     prompt = (
-        f"You are an HR expert. Analyze the resume below in relation to the job description.\n\n"
+        f"Evaluate this resume in relation to the job description.\n\n"
         f"Resume:\n{resume}\n\nJob Description:\n{jd}\n\n"
-        f"Return a professional evaluation."
+        f"Provide professional feedback:"
     )
     response = generator(prompt, max_new_tokens=300)[0]["generated_text"]
     return response.strip()
