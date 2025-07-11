@@ -2,16 +2,14 @@
 
 # Exit on any failure
 set -o errexit
+# Print each command before executing it
 set -o xtrace
 
-# Install project dependencies using Poetry
-poetry install --no-interaction --no-root
+# Install dependencies with poetry
+poetry install --no-root
 
-# Activate the virtual environment manually
-source "$(poetry env info --path)/bin/activate"
+# Download spaCy model
+poetry run python -m spacy download en_core_web_sm
 
-# Download spaCy model after spacy is installed
-python -m spacy download en_core_web_sm
-
-# Run the server (Render sets the PORT env variable)
-exec uvicorn main:app --host=0.0.0.0 --port=${PORT:-10000}
+# Run the server
+exec poetry run uvicorn main:app --host=0.0.0.0 --port=${PORT:-10000}
