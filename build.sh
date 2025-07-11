@@ -2,11 +2,15 @@
 
 # Exit on any failure
 set -o errexit
-
-# Print each command before executing it
 set -o xtrace
 
-# Install spaCy model
+# Install project dependencies using Poetry
+poetry install --no-interaction --no-root
+
+# Activate the virtual environment manually
+source "$(poetry env info --path)/bin/activate"
+
+# Download spaCy model after spacy is installed
 python -m spacy download en_core_web_sm
 
 # Run the server (Render sets the PORT env variable)

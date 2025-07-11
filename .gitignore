@@ -1,0 +1,14 @@
+# Virtual environments
+.venv/
+venv/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# VSCode
+.vscode/
+
+# macOS
+.DS_Store
